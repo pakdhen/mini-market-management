@@ -69,7 +69,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'branch_id' => $branch->id,
             ]);
-            $gudang->assignRole('Pegawai Gudang')->givePermissionTo('view_stocks', 'edit_stocks', 'view_products');
+            $gudang->assignRole('PegawaiGudang')->givePermissionTo('view_stocks', 'edit_stocks', 'view_products');
         }
     }
 }

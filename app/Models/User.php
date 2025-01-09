@@ -75,8 +75,8 @@ class User extends Authenticatable
      * @param string $role
      * @return bool
      */
-    public function hasRole(string $role): bool
-    {
-        return $this->roles()->where('name', $role)->exists();
-    }
+    // public function hasRole(string $role): bool
+    // {
+    //     return $this->roles()->where('name', $role)->exists();
+    // }
 }
