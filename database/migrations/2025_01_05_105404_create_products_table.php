@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255)->unique(); // Nama produk harus unik dan maksimal 255 karakter
             $table->decimal('price', 8, 2); // Harga produk dengan format desimal
-            $table->text('description')->nullable(); // Kolom deskripsi produk (opsional)
             $table->timestamps(); // Kolom untuk created_at dan updated_at
         });
     }
