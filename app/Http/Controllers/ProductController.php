@@ -36,21 +36,17 @@ class ProductController extends Controller
         // Validasi input dari form
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'stock' => 'required|integer',
         ]);
 
         // Menyimpan data produk ke database
         Product::create([
             'name' => $request->name,
-            'description' => $request->description,
             'price' => $request->price,
-            'stock' => $request->stock,
         ]);
 
         // Redirect ke halaman daftar produk dengan pesan sukses
-        return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan!');
+        return redirect()->route('products')->with('success', 'Produk berhasil ditambahkan!');
     }
 
     /**
@@ -79,21 +75,17 @@ class ProductController extends Controller
         // Validasi input dari form
         $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'stock' => 'required|integer',
         ]);
 
         // Memperbarui data produk di database
         $product->update([
             'name' => $request->name,
-            'description' => $request->description,
             'price' => $request->price,
-            'stock' => $request->stock,
         ]);
 
         // Redirect ke halaman daftar produk dengan pesan sukses
-        return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui!');
+        return redirect()->route('products')->with('success', 'Produk berhasil diperbarui!');
     }
 
     /**
@@ -105,6 +97,6 @@ class ProductController extends Controller
         $product->delete();
 
         // Redirect ke halaman daftar produk dengan pesan sukses
-        return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus!');
+        return redirect()->route('products')->with('success', 'Produk berhasil dihapus!');
     }
 }
