@@ -52,7 +52,7 @@ class StockController extends Controller
         ]);
 
         // Redirect ke halaman daftar stok dengan pesan sukses
-        return redirect()->route('stocks.index')->with('success', 'Stok berhasil ditambahkan!');
+        return redirect()->route('stocks')->with('success', 'Stok berhasil ditambahkan!');
     }
 
     /**
@@ -92,7 +92,7 @@ class StockController extends Controller
         ]);
 
         // Redirect ke halaman daftar stok dengan pesan sukses
-        return redirect()->route('stocks.index')->with('success', 'Stok berhasil diperbarui!');
+        return redirect()->route('stocks')->with('success', 'Stok berhasil diperbarui!');
     }
 
     /**
@@ -104,6 +104,6 @@ class StockController extends Controller
         $stock->delete();
 
         // Redirect ke halaman daftar stok dengan pesan sukses
-        return redirect()->route('stocks.index')->with('success', 'Stok berhasil dihapus!');
+        return redirect()->route('stocks')->with('success', 'Stok berhasil dihapus!');
     }
 }
