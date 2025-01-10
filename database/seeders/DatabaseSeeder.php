@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Branch;
+use App\Models\Product;
 use App\Models\User;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -25,6 +27,9 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PermissionSeeder::class,
             UserSeeder::class,
+            StockSeeder::class,
+            ProductSeeder::class,
+            BranchSeeder::class,
         ]);
     }
 }

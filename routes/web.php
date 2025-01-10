@@ -41,5 +41,11 @@ Route::middleware(['auth', 'role:Owner|Manager|'])->group(function () {
     Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 });
-
+Route::group(['middleware' => ['role:PegawaiGudang']], function () {
+    Route::get('/stocks/create', [StockController::class, 'create'])->name('stocks.create');
+    Route::post('/stocks/store', [StockController::class, 'store'])->name('stocks.store');
+    Route::get('/stocks/{stock}/edit', [StockController::class, 'edit'])->name('stocks.edit');
+    Route::patch('/stocks/{stock}', [StockController::class, 'update'])->name('stocks.update');
+    Route::delete('/stocks/{stock}', [StockController::class, 'destroy'])->name('stocks.destroy');
+});
 require __DIR__ . '/auth.php';
