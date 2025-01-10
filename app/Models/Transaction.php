@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'transaction_date',
         'user_id',
@@ -13,13 +16,13 @@ class Transaction extends Model
         'total_price',
     ];
 
-    /**
-     * Relasi ke produk yang ada di stok ini.
-     */
-    public function transaction()
+    protected $casts = [
+        'transaction_date' => 'datetime',
+    ];
+
+    public function user()
     {
-        // Setiap stok berhubungan dengan satu produk
-        return $this->belongsTo(transaction::class);
+        return $this->belongsTo(User::class);
     }
 
     /**
@@ -29,5 +32,10 @@ class Transaction extends Model
     {
         // Setiap stok berhubungan dengan satu cabang
         return $this->belongsTo(Branch::class);
+    }
+
+    public function details()
+    {
+        return $this->hasMany(TransactionDetail::class);
     }
 }
