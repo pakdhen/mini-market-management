@@ -18,4 +18,14 @@ class BranchController extends Controller
         // Mengirim data cabang ke view
         return view('branches.index', compact('branches'));
     }
+
+    public function show(Branch $branch)
+    {
+        // Ambil data stok produk, transaksi, dan pegawai terkait dengan cabang
+        $stocks = $branch->stocks()->with('product')->get();
+        $transactions = $branch->transactions()->with('details.product')->get();
+        $employees = $branch->employees;
+
+        return view('branches.show', compact('branch', 'stocks', 'transactions', 'employees'));
+    }
 }

@@ -15,12 +15,17 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    @hasrole('Owner')
                     <x-nav-link href="{{ route('products') }}" :active="request()->routeIs('products')">
-                        {{ __('Produk') }}
-                    </x-nav-link>  
+                        {{ __('Daftar Produk') }}
+                    </x-nav-link>
+                    @endhasrole 
+                    
+                    @unless(auth()->user()->hasRole('Owner'))
                     <x-nav-link href="{{ route('stocks') }}" :active="request()->routeIs('stocks')">
-                        {{ __('Stok') }}
+                        {{ __('Produk') }}
                     </x-nav-link> 
+                    @endunless
 
                     {{-- @hasanyrole('Owner|Manager|Supervisor|Kasir')
                         @unless(auth()->user()->hasRole('PegawaiGudang'))
@@ -30,7 +35,7 @@
                         @endunless
                     @endhasanyrole --}}
 
-                    @unless(auth()->user()->hasRole('PegawaiGudang'))
+                    @unless(auth()->user()->hasRole('PegawaiGudang|Owner'))
                         <x-nav-link href="{{ route('transactions') }}" :active="request()->routeIs('transactions')">
                             {{ __('Transaksi') }}
                         </x-nav-link>
@@ -45,9 +50,9 @@
                     @endhasrole
 
                     @hasrole('Owner')
-                    <x-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')">
+                    {{-- <x-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')">
                         {{ __('User') }}
-                    </x-nav-link>
+                    </x-nav-link> --}}
                     <x-nav-link href="{{ route('branches') }}" :active="request()->routeIs('branches')">
                         {{ __('Cabang') }}
                     </x-nav-link>

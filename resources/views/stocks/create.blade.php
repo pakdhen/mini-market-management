@@ -14,17 +14,23 @@
                         class="mt-6 space-y-6">
                         @csrf
                         <div class="max-w-xl">
-                            <x-input-label for="product_id" value="ID Produk" />
-                            <x-text-input id="product_id" type="text" name="product_id" class="mt-1 block w-full"
+                            <x-input-label for="product_id" value="Nama Produk" />
+                            <select name="product_id" id="product_id" class="mt-1 block w-full" required>
+                                <option value="" disabled selected>----------</option>
+                                @foreach($products as $product)
+                                    <option value="{{ $product->id }}">{{ $product->name }}</option>
+                                @endforeach
+                            </select>
+                            {{-- <x-text-input id="product_id" type="text" name="product_id" class="mt-1 block w-full"
                                 value="{{ old('product_id') }}" required />
-                            <x-input-error class="mt-2" :messages="$errors->get('product_id')" />
+                            <x-input-error class="mt-2" :messages="$errors->get('product_id')" /> --}}
                         </div>
-                        <div class="max-w-xl">
+                        {{-- <div class="max-w-xl">
                             <x-input-label for="branch_id" value="ID Branch" />
                             <x-text-input id="branch_id" type="text" name="branch_id" class="mt-1 block w-full"
                                 value="{{ old('branch_id') }}" required />
                             <x-input-error class="mt-2" :messages="$errors->get('branch_id')" />
-                        </div>
+                        </div> --}}
                         <div class="max-w-xl">
                             <x-input-label for="quantity" value="Kuantitas" />
                             <x-text-input id="quantity" type="text" name="quantity" class="mt-1 block w-full"
