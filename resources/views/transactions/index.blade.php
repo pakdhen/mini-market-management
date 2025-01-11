@@ -12,9 +12,13 @@
                                     @hasanyrole('Kasir')
                                         @unless(auth()->user()->hasRole('Supervisor'))
                                             <x-primary-button tag="a" href="{{ route('transactions.create') }}">Tambah Transaksi</x-primary-button>
-                                            <x-primary-button tag="a" href="{{ route('transactions.print') }}">Cetak Data Transaksi</x-primary-button>
                                         @endunless
                                     @endhasanyrole
+
+                                    @hasanyrole('Manager|Supervisor') 
+                                        <x-primary-button tag="a" href="{{ route('transactions.print') }}">Print Data Transaksi</x-primary-button>
+                                    @endhasanyrole
+                                    
                                     <table class="min-w-full divide-y divide-gray-200">
                                         <thead>
                                             <tr>

@@ -23,6 +23,7 @@
 
                     <div id="stocks" class="tab-content mt-6">
                         <h3 class="text-xl font-semibold mb-2">Stok Produk</h3>
+                        <x-primary-button tag="a" href="{{ route('stocks.print') }}">Print Data Stok Produk</x-primary-button>
                         <x-table>
                             <x-slot name="header">
                                 <tr class="py-10">
@@ -30,7 +31,7 @@
                                     <th scope="col">Nama Produk</th>
                                     <th scope="col">Harga</th>
                                     <th scope="col">Stok</th>
-                                    <th scope="col">Aksi</th>
+                                    {{-- <th scope="col">Aksi</th> --}}
                                 </tr>
                             </x-slot>
                             @foreach ($stocks as $stock)
@@ -39,13 +40,13 @@
                                     <td>{{ $stock->product->name }}</td>
                                     <td>{{ $stock->product->price }}</td>
                                     <td>{{ $stock->quantity }}</td>
-                                    <td>
+                                    {{-- <td>
                                         <x-primary-button tag="a"
                                             href="{{ route('stocks.edit', $stock->id) }}">Edit</x-primary-button>
                                         <x-danger-button x-data=""
                                             x-on:click.prevent="$dispatch('open-modal', 'confirm-stock-deletion')"
                                             x-on:click="$dispatch('set-action', '{{ route('stocks.destroy', $stock->id) }}')">{{ __('Delete') }}</x-danger-button>
-                                    </td>
+                                    </td> --}}
                                 </tr>
                             @endforeach
                         </x-table>
@@ -53,7 +54,7 @@
 
                     <div id="transactions" class="tab-content mt-6 hidden">
                         <h3 class="text-xl font-semibold mb-2">Transaksi</h3>
-                        <x-primary-button tag="a" href="{{ route('transactions.print') }}">Cetak Data Transaksi</x-primary-button>
+                        <x-primary-button tag="a" href="{{ route('transactions.print') }}">Print Data Transaksi</x-primary-button>
                         <table class="min-w-full bg-white dark:bg-gray-800">
                             <thead>
                                 <tr>

@@ -40,6 +40,10 @@ Route::middleware(['auth', 'role:Owner|Manager|Supervisor|Kasir'])->group(functi
     Route::get('/transactions/print', [TransactionController::class, 'print'])->name('transactions.print');
 });
 
+Route::middleware(['auth', 'role:Owner|Manager|Supervisor'])->group(function () {
+    Route::get('/stocks/print', [StockController::class, 'print'])->name('stocks.print');
+});
+
 // Route::resource('transactions', TransactionController::class);
 
 Route::group(['middleware' => ['role:Kasir']], function () {

@@ -7,6 +7,7 @@ use App\Models\Product; // Pastikan Anda memiliki relasi dengan model Product
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class StockController extends Controller
 {
@@ -121,5 +122,23 @@ class StockController extends Controller
 
         // Redirect ke halaman daftar stok dengan pesan sukses
         return redirect()->route('stocks')->with('success', 'Stok berhasil dihapus!');
+    }
+
+    public function print()
+    {
+        // $transactions = Transaction::with('user', 'details.product')->get();
+        // $pdf = Pdf::loadView('transactions.print', compact('transactions'));
+        // return $pdf->download('transactions.pdf');
+        $user = Auth::user();
+    
+        // Menyaring transaksi berdasarkan cabang pengguna yang login
+        $stocks = Stock::with('user')
+            ->where('branch_id', $user->branch_id) // Pastikan ada field 'branch_id' di tabel transaksi
+            ->get();
+        
+        // Membuat PDF dengan transaksi yang telah difilter
+        $pdf = Pdf::loadView('stocks.print', compact('stocks'));
+        
+        return $pdf->download('Stok Produk.pdf');
     }
 }
