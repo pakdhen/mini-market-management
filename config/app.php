@@ -1,5 +1,9 @@
 <?php
 
+// use Barryvdh\DomPDF\ServiceProvider;
+// use Barryvdh\DomPDF\Facade\Pdf;
+
+
 return [
 
     /*
@@ -122,5 +126,10 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+
+    // 'providers' => [
+    //     // Provider lain yang sudah ada
+    //     // Barryvdh\DomPDF\ServiceProvider::class,
+    // ],
 
 ];

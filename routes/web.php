@@ -37,15 +37,29 @@ Route::group(['middleware' => ['role:Owner']], function () {
 
 Route::middleware(['auth', 'role:Owner|Manager|Supervisor|Kasir'])->group(function () {
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
+    Route::get('/transactions/print', [TransactionController::class, 'print'])->name('transactions.print');
 });
 
-Route::middleware(['auth', 'role:Owner|Manager|'])->group(function () {
+// Route::resource('transactions', TransactionController::class);
+
+Route::group(['middleware' => ['role:Kasir']], function () {
+    // Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
+    Route::get('/transactions/create', [TransactionController::class, 'create'])->name('transactions.create');
+    Route::post('/transactions/store', [TransactionController::class, 'store'])->name('transactions.store');
+    Route::get('/transactions/{transaction}/edit', [TransactionController::class, 'edit'])->name('transactions.edit');
+    Route::patch('/transactions/{transaction}', [TransactionController::class, 'update'])->name('transactions.update');
+    Route::delete('/transactions/{transaction}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
+    
+});
+
+Route::middleware(['auth', 'role:Owner|Manager'])->group(function () {
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
     Route::post('/products/store', [ProductController::class, 'store'])->name('products.store');
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
     Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 });
+
 Route::middleware(['auth', 'role:Manager|PegawaiGudang'])->group(function () {
     Route::get('/stocks/create', [StockController::class, 'create'])->name('stocks.create');
     Route::post('/stocks/store', [StockController::class, 'store'])->name('stocks.store');
@@ -53,4 +67,7 @@ Route::middleware(['auth', 'role:Manager|PegawaiGudang'])->group(function () {
     Route::patch('/stocks/{stock}', [StockController::class, 'update'])->name('stocks.update');
     Route::delete('/stocks/{stock}', [StockController::class, 'destroy'])->name('stocks.destroy');
 });
+
+
+
 require __DIR__ . '/auth.php';

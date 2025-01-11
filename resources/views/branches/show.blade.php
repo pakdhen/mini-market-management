@@ -53,25 +53,26 @@
 
                     <div id="transactions" class="tab-content mt-6 hidden">
                         <h3 class="text-xl font-semibold mb-2">Transaksi</h3>
+                        <x-primary-button tag="a" href="{{ route('transactions.print') }}">Cetak Data Transaksi</x-primary-button>
                         <table class="min-w-full bg-white dark:bg-gray-800">
                             <thead>
                                 <tr>
+                                    <th class="py-2">Tanggal Transaksi</th>
                                     <th class="py-2">Nama Kasir</th>
-                                    <th class="py-2">Tanggal</th>
                                     <th class="py-2">Produk</th>
                                     <th class="py-2">Kuantitas</th>
-                                    <th class="py-2">Total</th>
+                                    <th class="py-2">Total Harga</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($transactions as $transaction)
                                     @foreach ($transaction->details as $detail)
                                         <tr>
+                                            <td class="py-2">{{ $transaction->transaction_date }}</td>
                                             <td class="py-2">{{ $transaction->user->name }}</td>
-                                            <td class="py-2">{{ $transaction->created_at }}</td>
                                             <td class="py-2">{{ $detail->product->name }}</td>
                                             <td class="py-2">{{ $detail->quantity }}</td>
-                                            <td class="py-2">{{ $transaction->total_price }}</td>
+                                            <td class="py-2">{{ $detail->quantity * $detail->price }}</td>
                                         </tr>
                                     @endforeach
                                 @endforeach
