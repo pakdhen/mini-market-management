@@ -1,3 +1,4 @@
+<!-- filepath: /D:/Semester 5/PWL/mini-market-management/resources/views/branches/index.blade.php -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -7,32 +8,15 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-
-
-                    <x-table>
-                        <x-slot name="header">
-                            <tr class="py-10">
-                                <th scope="col">No</th>
-                                <th scope="col">Nama Cabang</th>
-                                <th scope="col">Alamat</th>
-                            </tr>
-                        </x-slot>
-                        @foreach ($branches as $branch)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $branch->name }}</td>
-                                <td>{{ $branch->address }}</td>
-                                   
-                               
-                            </tr>
-                        @endforeach
-                    </x-table>
-
-                   
-
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                @foreach ($branches as $branch)
+                    <a href="{{ route('branches.show', $branch->id) }}" class="bg-white dark:bg-gray-700 overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold mb-2">{{ $branch->name }}</h3>
+                            <p class="text-lg">{{ $branch->address }}</p>
+                        </div>
+                    </a>
+                @endforeach
             </div>
         </div>
     </div>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Stock;
 use App\Models\Product; // Pastikan Anda memiliki relasi dengan model Product
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class StockController extends Controller
@@ -13,11 +15,17 @@ class StockController extends Controller
      */
     public function index()
     {
-        // Mengambil semua data stok dari database
-        $stocks = Stock::all();
+        // Ambil branch_id dari pengguna yang sedang login
+        $branchId = Auth::user()->branch_id;
+
+        // Mengambil semua data stok yang ada di cabang pengguna yang sedang login
+        $stocks = Stock::with('product')->where('branch_id', $branchId)->get();
+
+        // Mengambil nama cabang dari pengguna yang sedang login
+        $branchName = Auth::user()->branch->name;
 
         // Mengirim data stok ke view
-        return view('stocks.index', compact('stocks'));
+        return view('stocks.index', compact('stocks', 'branchName'));
     }
 
     /**
@@ -25,8 +33,12 @@ class StockController extends Controller
      */
     public function create()
     {
-        // Mengambil data produk untuk dipilih saat menambah stok
-        $products = Product::all();
+        $branchId = Auth::user()->branch_id;
+
+         // Ambil produk yang belum memiliki stok di cabang pengguna yang sedang login
+         $products = Product::whereDoesntHave('stocks', function ($query) use ($branchId) {
+            $query->where('branch_id', $branchId);
+        })->get();
 
         // Menampilkan halaman form untuk menambah stok
         return view('stocks.create', compact('products'));
@@ -37,18 +49,22 @@ class StockController extends Controller
      */
     public function store(Request $request)
     {
+        // Ambil branch_id dari pengguna yang sedang login
+        $branchId = Auth::user()->branch_id;
+
         // Validasi input dari form
         $request->validate([
-            'product_id' => 'required|exists:products,id',  // Validasi apakah produk ada
+            'product_id' => 'required|exists:products,id|unique:stocks,product_id,NULL,id,branch_id,' . $branchId,  // Validasi apakah produk ada dan unik untuk branch_id
+            // 'product_id' => 'required|exists:products,id',  // Validasi apakah produk ada
             'quantity' => 'required|integer|min:1',         // Validasi stok yang ditambah
-            'branch_id' => 'required|exists:branches,id',   // Validasi cabang tempat produk
+            // 'branch_id' => 'required|exists:branches,id',   // Validasi cabang tempat produk
         ]);
 
         // Menyimpan stok baru ke database
         Stock::create([
             'product_id' => $request->product_id,
             'quantity' => $request->quantity,
-            'branch_id' => $request->branch_id,
+            'branch_id' => $branchId,
         ]);
 
         // Redirect ke halaman daftar stok dengan pesan sukses

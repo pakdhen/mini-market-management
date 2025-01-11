@@ -1,46 +1,56 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Stock') }}
+            {{ __('Daftar Produk Minimarket ' . $branchName) }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12 px-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                    @hasrole('PegawaiGudang')
+                    {{-- @hasrole('PegawaiGudang')
                     <x-primary-button tag="a" href="{{ route('stocks.create') }}">Tambah Data Produk</x-primary-button>
-                    @endhasrole
+                    @endhasrole --}}
+
+                    @hasanyrole('Manager|PegawaiGudang')
+                        @unless(auth()->user()->hasRole('Kasir'))
+                            <x-primary-button  tag="a" href="{{ route('stocks.create') }}">Tambah Data Produk</x-primary-button>
+                        @endunless
+                    @endhasanyrole
 
                     <x-table>
                         <x-slot name="header">
                             <tr class="py-10">
                                 <th scope="col">No</th>
-                                <th scope="col">ID Produk</th>
-                                <th scope="col">ID Branch</th>
-                                <th scope="col">Kuantitas</th>
-                                @hasrole('PegawaiGudang')
-                                <th scope="col">Aksi</th>
-                                @endhasrole
+                                <th scope="col">Nama Produk</th>
+                                <th scope="col">Harga</th>
+                                <th scope="col">Stok</th>
+                                @hasanyrole('Manager|PegawaiGudang')
+                                    @unless(auth()->user()->hasRole('Kasir'))
+                                        <th scope="col">Aksi</th>
+                                    @endunless
+                                @endhasanyrole
                             </tr>
                         </x-slot>
                         @foreach ($stocks as $stock)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $stock->product_id }}</td>
-                                <td>{{ $stock->branch_id }}</td>
+                                <td>{{ $stock->product->name }}</td>
+                                <td>{{ $stock->product->price }}</td>
                                 <td>{{ $stock->quantity }}</td>
-                                @hasrole('PegawaiGudang')
-                                <td>
-                                    <x-primary-button tag="a"
-                                        href="{{ route('stocks.edit', $stock->id) }}">Edit</x-primary-button>
-                                    <x-danger-button x-data=""
-                                        x-on:click.prevent="$dispatch('open-modal', 'confirm-stock-deletion')"
-                                        x-on:click="$dispatch('set-action', '{{ route('stocks.destroy', $stock->id) }}')">{{ __('Delete') }}</x-danger-button>
-                                </td>
-                                @endhasrole
+                                @hasanyrole('Manager|PegawaiGudang')
+                                    @unless(auth()->user()->hasRole('Kasir'))
+                                        <td>
+                                            <x-primary-button tag="a"
+                                                href="{{ route('stocks.edit', $stock->id) }}">Edit</x-primary-button>
+                                            <x-danger-button x-data=""
+                                                x-on:click.prevent="$dispatch('open-modal', 'confirm-stock-deletion')"
+                                                x-on:click="$dispatch('set-action', '{{ route('stocks.destroy', $stock->id) }}')">{{ __('Delete') }}</x-danger-button>
+                                        </td>
+                                    @endunless
+                                @endhasanyrole
                             </tr>
                         @endforeach
                     </x-table>

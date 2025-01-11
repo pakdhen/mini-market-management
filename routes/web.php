@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
 Route::group(['middleware' => ['role:Owner']], function () {
     Route::get('/users', [UserController::class, 'index'])->name('users');
     Route::get('/branches', [BranchController::class, 'index'])->name('branches');
+    Route::get('/branches/{branch}', [BranchController::class, 'show'])->name('branches.show');
+    Route::resource('users', UserController::class);
 });
 
 Route::middleware(['auth', 'role:Owner|Manager|Supervisor|Kasir'])->group(function () {
@@ -44,7 +46,7 @@ Route::middleware(['auth', 'role:Owner|Manager|'])->group(function () {
     Route::patch('/products/{product}', [ProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 });
-Route::group(['middleware' => ['role:PegawaiGudang']], function () {
+Route::middleware(['auth', 'role:Manager|PegawaiGudang'])->group(function () {
     Route::get('/stocks/create', [StockController::class, 'create'])->name('stocks.create');
     Route::post('/stocks/store', [StockController::class, 'store'])->name('stocks.store');
     Route::get('/stocks/{stock}/edit', [StockController::class, 'edit'])->name('stocks.edit');

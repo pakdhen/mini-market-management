@@ -15,17 +15,17 @@
                         @method('PATCH')
                         @csrf
                         <div class="max-w-xl">
-                            <x-input-label for="product_id" value="ID Produk" />
-                            <x-text-input id="product_id" type="text" name="product_id" class="mt-1 block w-full"
-                                value="{{ old('product_id', $stock->product_id) }}" required />
-                            <x-input-error class="mt-2" :messages="$errors->get('product_id')" />
+                            <x-input-label for="product_id" value="Nama Produk" />
+                            <x-text-input type="text" id="product_name" class="mt-1 block w-full" value="{{ $stock->product->name }}" disabled />
+                            <x-text-input type="hidden" name="product_id" value="{{ $stock->product_id }}" />
+                            {{-- <x-input-error class="mt-2" :messages="$errors->get('product_id')" /> --}}
                         </div>
-                        <div class="max-w-xl">
+                        {{-- <div class="max-w-xl">
                             <x-input-label for="branch_id" value="ID Branch" />
                             <x-text-input id="branch_id" type="text" name="branch_id" class="mt-1 block w-full"
                                 value="{{ old('branch_id', $stock->branch_id) }}" required />
                             <x-input-error class="mt-2" :messages="$errors->get('branch_id')" />
-                        </div>
+                        </div> --}}
                         <div class="max-w-xl">
                             <x-input-label for="quantity" value="Kuantitas" />
                             <x-text-input id="quantity" type="text" name="quantity" class="mt-1 block w-full"

@@ -25,6 +25,11 @@ class User extends Authenticatable
         'password',
     ];
 
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

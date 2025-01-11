@@ -5,22 +5,22 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12 px-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                    @hasanyrole('Owner|Manager|Supervisor')
+                    @hasanyrole('Owner')
                     <x-primary-button tag="a" href="{{ route('products.create') }}">Tambah Data Produk</x-primary-button>
                     @endhasanyrole
 
                     <x-table>
                         <x-slot name="header">
                             <tr class="py-10">
-                                <th scope="col">#</th>
+                                <th scope="col">No</th>
                                 <th scope="col">Nama Produk</th>
                                 <th scope="col">Harga</th>
-                                @hasanyrole('Owner|Manager|Supervisor')
+                                @hasanyrole('Owner')
                                 <th scope="col">Aksi</th>
                                 @endhasanyrole
                             </tr>
@@ -30,7 +30,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->price }}</td>
-                                @hasanyrole('Owner|Manager|Supervisor')
+                                @hasanyrole('Owner')
                                 <td>
                                     <x-primary-button tag="a"
                                         href="{{ route('products.edit', $product->id) }}">Edit</x-primary-button>

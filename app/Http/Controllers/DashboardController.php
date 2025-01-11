@@ -7,11 +7,13 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Models\Stock;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        $userName = Auth::user()->name;
         $totalBranches = Branch::count();
         $totalProducts = Product::count();
         $totalSales = Transaction::sum('total_price');
@@ -27,6 +29,13 @@ class DashboardController extends Controller
 
         // Ambil semua cabang
         $branches = Branch::all();
+
+        // Ambil data cabang dari pengguna yang sedang login
+        $branch = Branch::where('id', Auth::user()->branch_id)->first();
+        
+        // Periksa apakah cabang ditemukan
+        $branchName = $branch ? $branch->name : 'Cabang tidak ditemukan';
+        $branchAddress = $branch ? $branch->address : 'Alamat tidak ditemukan';
 
         // Ambil penjualan per cabang
         $salesByBranch = Transaction::selectRaw('branch_id, SUM(total_price) as total')
@@ -45,6 +54,6 @@ class DashboardController extends Controller
                                 ->take(5)
                                 ->get();
 
-        return view('dashboard', compact('totalBranches', 'totalProducts','totalStock', 'totalSales', 'salesByBranch', 'salesByBranchData', 'recentTransactions'));
+        return view('dashboard', compact('userName', 'branches', 'branchName', 'branchAddress', 'totalBranches', 'totalProducts','totalStock', 'totalSales', 'salesByBranch', 'salesByBranchData', 'recentTransactions'));
     }
 }

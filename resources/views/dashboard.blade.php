@@ -8,7 +8,33 @@
     <!-- Stats Section -->
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <p>Selamat datang, {{ $userName }}!</p>
+                </div>
+            </div>
+
+            @unless(auth()->user()->hasRole('Owner'))
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-6">
+                <!-- Card 1: Total Branches -->
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
+                        <h3 class="text-xl font-semibold mb-2">Nama Cabang</h3>
+                        <p class="text-2xl font-bold">{{ $branchName }}</p>
+                    </div>
+                </div>
+                <!-- Card 1: Total Branches -->
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
+                        <h3 class="text-xl font-semibold mb-2">Lokasi</h3>
+                        <p class="text-2xl font-bold">{{ $branchAddress }}</p>
+                    </div>
+                </div>
+            </div>
+            @endunless
+
+            @role('Owner')
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
                 <!-- Card 1: Total Branches -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
@@ -93,6 +119,7 @@
                     </table>
                 </div>
             </div>
+            @endrole
         </div>
     </div>
 
