@@ -1,111 +1,91 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TransactionController extends Controller
 {
-    /**
-     * Display a listing of the resource (menampilkan daftar stok).
-     */
     public function index()
     {
-        // Mengambil semua data stok dari database
-        $transactions = Transaction::all();
+        // $transactions = Transaction::with('user', 'details.product')->get();
+        // $users = User::all(); // Ambil semua pengguna
+        // $products = Product::all(); // Ambil semua produk
+        // return view('transactions.index', compact('transactions', 'users', 'products'));
+        // $transactions = Transaction::with('user', 'details.product')->get();
+        // Ambil branch_id dari pengguna yang sedang login
+        $branchId = Auth::user()->branch_id;
 
-        // Mengirim data stok ke view
+        // Mengambil semua data stok yang ada di cabang pengguna yang sedang login
+        $transactions = Transaction::with('details')->where('branch_id', $branchId)->get();
         return view('transactions.index', compact('transactions'));
     }
 
-    /**
-     * Show the form for creating a new resource (form untuk menambah stok).
-     */
     public function create()
     {
-        // Mengambil data produk untuk dipilih saat menambah stok
-        $transactions = Transaction::all();
-
-        // Menampilkan halaman form untuk menambah stok
-        return view('transactions.create', compact('transactions'));
+        $products = Product::all();
+        $branchId = Auth::user()->branch_id; // Ambil ID cabang pengguna yang sedang login
+        // $users = User::role('Kasir')->where('branch_id', $branchId)->get(); // Ambil semua pengguna dengan peran "Kasir" di cabang yang sama
+        $users = User::whereHas('roles', function($query) {
+            $query->where('name', 'Kasir');
+        })->where('branch_id', $branchId)
+          ->whereDoesntHave('roles', function($query) {
+              $query->where('name', 'Supervisor');
+          })->get(); // Ambil semua pengguna dengan peran "Kasir" di cabang yang sama dan bukan "Supervisor"
+        return view('transactions.create', compact('products', 'users'));
     }
 
-    /**
-     * Store a newly created resource in storage (menyimpan stok ke database).
-     */
     public function store(Request $request)
     {
-        // Validasi input dari form
         $request->validate([
-            'transaction_date' => 'required|exists:transaction,id',
             'user_id' => 'required|exists:users,id',
-            'branch_id' => 'required|exists:branches,id',
-            'total_price' => 'required|integer|min:1',
-            
+            'details' => 'required|array',
+            'details.*.product_id' => 'required|exists:products,id',
+            'details.*.quantity' => 'required|integer|min:1',
         ]);
 
-        // Menyimpan stok baru ke database
-        Transaction::create([
-            'transaction_date' => $request->transaction_date,
+        $transaction = Transaction::create([
+            'transaction_date' => now(),
             'user_id' => $request->user_id,
-            'branch_id' => $request->branch_id,
-            'total_price' => $request->total_price,
+            'branch_id' => Auth::user()->branch_id,
+            'total_price' => 0,
         ]);
 
-        // Redirect ke halaman daftar stok dengan pesan sukses
-        return redirect()->route('stocks')->with('success', 'Stok berhasil ditambahkan!');
+        $totalPrice = 0;
+        foreach ($request->details as $detail) {
+            $product = Product::find($detail['product_id']);
+            $totalPrice += $product->price * $detail['quantity'];
+            $transaction->details()->create([
+                'product_id' => $detail['product_id'],
+                'quantity' => $detail['quantity'],
+                'price' => $product->price,
+            ]);
+        }
+
+        $transaction->update(['total_price' => $totalPrice]);
+
+        return redirect()->route('transactions')->with('success', 'Transaksi berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource (menampilkan detail stok).
-     */
-    public function show(Transaction $transaction)
+    public function print()
     {
-        // Menampilkan detail stok berdasarkan ID stok
-        return view('transactions.show', compact('transaction'));
-    }
-
-    /**
-     * Show the form for editing the specified resource (form untuk mengedit stok).
-     */
-    public function edit(Transaction $transactions)
-    {
-        // Mengambil data produk dan cabang untuk form edit
-        $products = Transaction::all();
-
-        // Menampilkan form edit stok dengan data produk yang sesuai
-        return view('transactions.edit', compact('transactions', 'products'));
-    }
-
-    /**
-     * Update the specified resource in storage (memperbarui stok di database).
-     */
-    // public function update(Request $request, Transaction $stock)
-    // {
-    //     // Validasi input dari form
-    //     $request->validate([
-    //         'quantity' => 'required|integer|min:1',  // Validasi stok yang diperbarui
-    //     ]);
-
-    //     // Memperbarui jumlah stok di database
-    //     $stock->update([
-    //         'quantity' => $request->quantity,
-    //     ]);
-
-    //     // Redirect ke halaman daftar stok dengan pesan sukses
-    //     return redirect()->route('stocks')->with('success', 'Stok berhasil diperbarui!');
-    // }
-
-    /**
-     * Remove the specified resource from storage (menghapus stok dari database).
-     */
-    public function destroy(Transaction $transaction)
-    {
-        // Menghapus stok dari database
-        $transaction->delete();
-
-        // Redirect ke halaman daftar stok dengan pesan sukses
-        return redirect()->route('transactions')->with('success', 'Transaksi berhasil dihapus!');
+        // $transactions = Transaction::with('user', 'details.product')->get();
+        // $pdf = Pdf::loadView('transactions.print', compact('transactions'));
+        // return $pdf->download('transactions.pdf');
+        $user = Auth::user();
+    
+        // Menyaring transaksi berdasarkan cabang pengguna yang login
+        $transactions = Transaction::with('user', 'details.product')
+            ->where('branch_id', $user->branch_id) // Pastikan ada field 'branch_id' di tabel transaksi
+            ->get();
+        
+        // Membuat PDF dengan transaksi yang telah difilter
+        $pdf = Pdf::loadView('transactions.print', compact('transactions'));
+        
+        return $pdf->download('transactions.pdf');
     }
 }

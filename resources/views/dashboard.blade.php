@@ -16,14 +16,14 @@
 
             @unless(auth()->user()->hasRole('Owner'))
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-6">
-                <!-- Card 1: Total Branches -->
+                
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <h3 class="text-xl font-semibold mb-2">Nama Cabang</h3>
                         <p class="text-2xl font-bold">{{ $branchName }}</p>
                     </div>
                 </div>
-                <!-- Card 1: Total Branches -->
+                
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <h3 class="text-xl font-semibold mb-2">Lokasi</h3>
@@ -34,7 +34,7 @@
             @endunless
 
             @role('Owner')
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                 <!-- Card 1: Total Branches -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
@@ -52,12 +52,12 @@
                 </div>
                 
                 <!-- Card 3: Total Stock -->
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                {{-- <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <h3 class="text-xl font-semibold mb-2">Total Stok</h3>
                         <p class="text-3xl font-bold">{{ $totalStock }}</p>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Card 4: Total Sales -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">

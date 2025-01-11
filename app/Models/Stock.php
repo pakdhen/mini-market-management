@@ -12,6 +12,11 @@ class Stock extends Model
         'quantity',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     /**
      * Relasi ke produk yang ada di stok ini.
      */

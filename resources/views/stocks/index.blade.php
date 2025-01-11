@@ -14,10 +14,14 @@
                     <x-primary-button tag="a" href="{{ route('stocks.create') }}">Tambah Data Produk</x-primary-button>
                     @endhasrole --}}
 
-                    @hasanyrole('Manager|PegawaiGudang')
+                    @hasanyrole('PegawaiGudang')
                         @unless(auth()->user()->hasRole('Kasir'))
                             <x-primary-button  tag="a" href="{{ route('stocks.create') }}">Tambah Data Produk</x-primary-button>
                         @endunless
+                    @endhasanyrole
+
+                    @hasanyrole('Manager|Supervisor') 
+                        <x-primary-button tag="a" href="{{ route('stocks.print') }}">Print Data Stok Produk</x-primary-button>
                     @endhasanyrole
 
                     <x-table>
@@ -27,7 +31,7 @@
                                 <th scope="col">Nama Produk</th>
                                 <th scope="col">Harga</th>
                                 <th scope="col">Stok</th>
-                                @hasanyrole('Manager|PegawaiGudang')
+                                @hasanyrole('PegawaiGudang')
                                     @unless(auth()->user()->hasRole('Kasir'))
                                         <th scope="col">Aksi</th>
                                     @endunless
@@ -40,7 +44,7 @@
                                 <td>{{ $stock->product->name }}</td>
                                 <td>{{ $stock->product->price }}</td>
                                 <td>{{ $stock->quantity }}</td>
-                                @hasanyrole('Manager|PegawaiGudang')
+                                @hasanyrole('PegawaiGudang')
                                     @unless(auth()->user()->hasRole('Kasir'))
                                         <td>
                                             <x-primary-button tag="a"
